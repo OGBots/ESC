@@ -1,0 +1,112 @@
+{
+    "example_format": {
+        "id": "OGESC-XXXXX",
+        "seller_id": 123456789,
+        "buyer_username": "example_buyer",
+        "product_name": "Example Product",
+        "product_description": "Example description",
+        "price": 1000.0,
+        "fee": 30.0,
+        "status": "pending",
+        "product_delivered": false
+    },
+    "OGESC-AZDIS": {
+        "id": "OGESC-AZDIS",
+        "seller_id": 6459253633,
+        "buyer_username": "td",
+        "product_name": "yes",
+        "product_description": "ye",
+        "price": 1000.0,
+        "fee": 30.0,
+        "status": "pending",
+        "product_delivered": false
+    },
+    "OGESC-4PVTS": {
+        "id": "OGESC-4PVTS",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 1000.0,
+        "fee": 30.0,
+        "status": "in_progress",
+        "product_delivered": false
+    },
+    "OGESC-T6WNJ": {
+        "id": "OGESC-T6WNJ",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 1000.0,
+        "fee": 30.0,
+        "status": "in_progress",
+        "product_delivered": false
+    },
+    "OGESC-2PNZK": {
+        "id": "OGESC-2PNZK",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 1000.0,
+        "fee": 30.0,
+        "status": "in_progress",
+        "product_delivered": false
+    },
+    "OGESC-YBH86": {
+        "id": "OGESC-YBH86",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 100.0,
+        "fee": 3.0,
+        "status": "in_progress",
+        "product_delivered": false
+    },
+    "OGESC-WLUVR": {
+        "id": "OGESC-WLUVR",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 799.0,
+        "fee": 23.97,
+        "status": "completed",
+        "product_delivered": true
+    },
+    "OGESC-DCBSH": {
+        "id": "OGESC-DCBSH",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "pro bin",
+        "product_description": "amazon high hit bin",
+        "price": 108.0,
+        "fee": 3.24,
+        "status": "completed",
+        "product_delivered": true
+    },
+    "OGESC-BENTO": {
+        "id": "OGESC-BENTO",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "last",
+        "product_description": "yes",
+        "price": 100.0,
+        "fee": 3.0,
+        "status": "completed",
+        "product_delivered": true
+    },
+    "OGESC-YUJPP": {
+        "id": "OGESC-YUJPP",
+        "seller_id": 6085888608,
+        "buyer_username": "satsnova",
+        "product_name": "yes",
+        "product_description": "yes",
+        "price": 300.0,
+        "fee": 9.0,
+        "status": "completed",
+        "product_delivered": true
+    }
+}

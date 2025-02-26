@@ -1,0 +1,26 @@
+{
+    "example_format": {
+        "id": 123456789,
+        "username": "example_user",
+        "balance": 0.0,
+        "completed_deals": 0,
+        "pending_deals": 0,
+        "is_banned": false
+    },
+    "6459253633": {
+        "id": 6459253633,
+        "username": "SatsNova",
+        "balance": 95460.79,
+        "completed_deals": 4,
+        "pending_deals": -4,
+        "is_banned": false
+    },
+    "6085888608": {
+        "id": 6085888608,
+        "username": "Tanvisingh26",
+        "balance": 101307.0,
+        "completed_deals": 4,
+        "pending_deals": 0,
+        "is_banned": false
+    }
+}

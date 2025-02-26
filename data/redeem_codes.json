@@ -1,0 +1,20 @@
+{
+    "example_format": {
+        "amount": 1000.0,
+        "used": false,
+        "created_by": 123456789,
+        "used_by": null
+    },
+    "OGRDM-NGIKV": {
+        "amount": 100000.0,
+        "used": true,
+        "created_by": 6459253633,
+        "used_by": 6085888608
+    },
+    "OGRDM-PUK2E": {
+        "amount": 100000.0,
+        "used": true,
+        "created_by": 6459253633,
+        "used_by": 6459253633
+    }
+}
