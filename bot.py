@@ -1,45 +1,54 @@
 import logging
+import pytz
 from telegram import Update
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ConversationHandler, MessageHandler, filters
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    ContextTypes,
+    JobQueue,
+    ConversationHandler,
+    MessageHandler,
+    CallbackQueryHandler,
+    filters
+)
 from config import BOT_TOKEN
-from handlers.start import start, check_join_callback
-from handlers.escrow import (
-    start_escrow, product_name, product_description, product_price, 
-    buyer_username, find_deal, handle_deal_response, handle_product_delivery,
-    process_product_delivery, handle_confirmation,
-    approve_deal_command, decline_deal_command, confirm_deal_command, report_deal_command,
+from handlers import (
+    start, help_command, wallet, redeem,
+    start_escrow, product_name, product_description, product_price, buyer_username,
+    find_deal, approve_deal_command, decline_deal_command, confirm_deal_command,
+    report_deal_command, admin_stats, admin_ban, admin_unban, admin_add_balance,
+    admin_remove_balance, admin_generateredeem, admin_broadcast,
+    admin_add_channel, admin_remove_channel, id_command, admin_commands,
     PRODUCT_NAME, PRODUCT_DESCRIPTION, PRODUCT_PRICE, BUYER_USERNAME
 )
-from handlers.wallet import wallet, redeem
-from handlers.admin import (
-    admin_stats, admin_ban, admin_unban,
-    admin_add_balance, admin_remove_balance,
-    admin_generateredeem, admin_broadcast,
-    admin_add_channel, admin_remove_channel
-)
-from handlers.help import help_command, admin_commands
 
 # Enable logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     level=logging.INFO
 )
-
 logger = logging.getLogger(__name__)
 
 def main():
     """Start the bot."""
+    # Create JobQueue with timezone
+    job_queue = JobQueue()
+    job_queue.scheduler.timezone = pytz.timezone('Asia/Kolkata')
+
     # Create the Application
-    application = Application.builder().token(BOT_TOKEN).build()
+    application = (
+        Application.builder()
+        .token(BOT_TOKEN)
+        .job_queue(job_queue)
+        .build()
+    )
 
-    # Add handlers
+    # Add command handlers
     application.add_handler(CommandHandler("start", start))
-    application.add_handler(CallbackQueryHandler(check_join_callback, pattern="^check_join$"))
-
-    # Help handlers
     application.add_handler(CommandHandler("help", help_command))
-    application.add_handler(CommandHandler("og", admin_commands))
-
+    application.add_handler(CommandHandler("wallet", wallet))
+    application.add_handler(CommandHandler("redeem", redeem))
+    
     # Escrow conversation handler
     escrow_conv_handler = ConversationHandler(
         entry_points=[CommandHandler("escrow", start_escrow)],
@@ -49,27 +58,19 @@ def main():
             PRODUCT_PRICE: [MessageHandler(filters.TEXT & ~filters.COMMAND, product_price)],
             BUYER_USERNAME: [MessageHandler(filters.TEXT & ~filters.COMMAND, buyer_username)],
         },
-        fallbacks=[],
+        fallbacks=[CommandHandler("cancel", lambda u, c: ConversationHandler.END)],
     )
     application.add_handler(escrow_conv_handler)
-
-    # Deal handlers
+    
+    # Deal management commands
     application.add_handler(CommandHandler("find_deal", find_deal))
     application.add_handler(CommandHandler("approve_deal", approve_deal_command))
     application.add_handler(CommandHandler("decline_deal", decline_deal_command))
     application.add_handler(CommandHandler("confirm_deal", confirm_deal_command))
     application.add_handler(CommandHandler("report_deal", report_deal_command))
-    application.add_handler(CallbackQueryHandler(handle_deal_response, pattern="^(approve|decline)_"))
-    application.add_handler(CallbackQueryHandler(handle_product_delivery, pattern="^send_product_"))
-    application.add_handler(MessageHandler(filters.ALL & ~filters.COMMAND, process_product_delivery))
-    application.add_handler(CallbackQueryHandler(handle_confirmation, pattern="^confirm_"))
-    application.add_handler(CallbackQueryHandler(handle_confirmation, pattern="^report_"))
+    application.add_handler(CommandHandler("id", id_command))
 
-    # Other handlers
-    application.add_handler(CommandHandler("wallet", wallet))
-    application.add_handler(CommandHandler("redeem", redeem))
-
-    # Admin handlers
+    # Admin commands
     application.add_handler(CommandHandler("admin_stats", admin_stats))
     application.add_handler(CommandHandler("admin_ban", admin_ban))
     application.add_handler(CommandHandler("admin_unban", admin_unban))
@@ -79,9 +80,35 @@ def main():
     application.add_handler(CommandHandler("admin_broadcast", admin_broadcast))
     application.add_handler(CommandHandler("adminaddchannel", admin_add_channel))
     application.add_handler(CommandHandler("adminremovechannel", admin_remove_channel))
+    application.add_handler(CommandHandler("og", admin_commands))
+
+    # Callback handlers
+    from handlers.escrow import handle_deal_response, handle_product_delivery, process_product_delivery, handle_confirmation
+    application.add_handler(CallbackQueryHandler(handle_deal_response, pattern=r"^approve_|^decline_"))
+    application.add_handler(CallbackQueryHandler(handle_product_delivery, pattern=r"^send_product_"))
+    application.add_handler(CallbackQueryHandler(handle_confirmation, pattern=r"^confirm_|^report_"))
+    
+    # Fixed media handler with correct filters
+    application.add_handler(MessageHandler(
+        (filters.TEXT & ~filters.COMMAND) |
+        filters.PHOTO |
+        filters.VIDEO |
+        filters.Document.ALL |
+        filters.AUDIO,
+        process_product_delivery
+    ))
 
     # Start the bot
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    print("Bot is starting...")
+    application.run_polling(
+        allowed_updates=Update.ALL_TYPES,
+        drop_pending_updates=True,
+        timeout=60,
+        read_timeout=60,
+        write_timeout=60,
+        connect_timeout=60,
+        pool_timeout=60
+    )
 
 if __name__ == '__main__':
     main()
